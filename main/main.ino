@@ -1,8 +1,5 @@
 //sensor de temperatura
-/*
- Creado: Luis del Valle (ldelvalleh@programarfacil.com)
- https://programarfacil.com
-*/
+
  
 // Declaracion de variables globales
 float tempC; // Variable para almacenar el valor obtenido del sensor (0 a 1023)
