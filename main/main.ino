@@ -1,5 +1,5 @@
 /*VARIABLES INTERNAS
- * V
+ * 
  * 
  * Documentación de variables internas:
  * + tempC: Temperatura leída del LM35, esta será en grados centígrados
@@ -20,18 +20,16 @@ float tempC; // Variable para almacenar el valor obtenido del sensor (0 a 1023)
  * para que estas activen la resistencia
  */
 
-const pinValEnt = 1; //simulación de la electroválvula de entrada de agua (pin 1)
-const pinValSal = 2; //simulación de la electroválvula de salida de agua (pin 2)
+const int pinValEnt = 1; //simulación de la electroválvula de entrada de agua (pin 1)
+const int pinValSal = 2; //simulación de la electroválvula de salida de agua (pin 2)
 
 /*RESISTENCIA DE SALIDA
  * La resistencia de salida se activará de acuerdo a las siguientes características:
  * 
  * + Las electroválvulas detecten full caudal
- * + 
+ * + la temperatura del agua esté por debajo de los 40°C
  */
 void setup() {
-  // Configuramos el puerto serial a 9600 bps
-  Serial.begin(9600);
  
 }
  
@@ -42,11 +40,9 @@ void loop() {
   // Calculamos la temperatura con la fórmula
   tempC = (5.0 * tempC * 100.0)/1024.0; 
  
-  // Envia el dato al puerto serial
-  Serial.print(tempC);
-  // Salto de línea
-  Serial.print("\n");
+
   
   // Esperamos un tiempo para repetir el loop
   delay(1000);
 
+}
