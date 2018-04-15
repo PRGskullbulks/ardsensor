@@ -53,7 +53,8 @@ void loop() {
   // Calculamos la temperatura con la fórmula
   tempC = (5.0 * tempC * 100.0)/1024.0;
   valTmpSen = analogRead(pinLM35);
-  Serial.println(valTmpSen);
+  Serial.print(valTmpSen);
+  Serial.println(" valor voltaje");
   delay(500);
 }
 
