@@ -20,9 +20,11 @@ float tempC; // Variable para almacenar el valor obtenido del sensor (0 a 1023)
  * una termocupla, lo conectamos al pin A0
  */
  const int pinLM35 = 0; // sensor de temperatura
- const int pot1 = 1;
- const int pot2 = 2;
  const int ledP = 13;
+ const int rs = 12, en = 11, d4 = 5, d5 = 4, d6 = 3, d7 = 2;
+ const int pinValEnt = 8; //simulación de la electroválvula de entrada de agua (pin 1 DIPSW)
+ const int pinValSal = 9; //simulación de la electroválvula de salida de agua (pin 2 DIPSW)
+ LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
  
 /*ELECTROVALVULAS
  * 
@@ -30,12 +32,13 @@ float tempC; // Variable para almacenar el valor obtenido del sensor (0 a 1023)
  * para que estas activen la resistencia
  */
 
-int pinValEnt = 3; //simulación de la electroválvula de entrada de agua (pin 1)
-int pinValSal = 4; //simulación de la electroválvula de salida de agua (pin 2)
+int intResSta = 0; //estado de la resistencia.
 int valTmpSen = 0;
 int valElcEnt = 0;
 int valElcSal = 0;
 int valTmpMed = 0;
+int tmpThrVal = 0;
+
 /*RESISTENCIA DE SALIDA
  * La resistencia de salida se activará de acuerdo a las siguientes características:
  * 
@@ -43,45 +46,43 @@ int valTmpMed = 0;
  * + la temperatura del agua esté por debajo de los 40°C
  */
 void setup() {
-  //pinMode(pinValEnt, INPUT_PULLUP);
-  pinMode(pinValEnt, INPUT);
+  pinMode(pinValEnt, INPUT_PULLUP);
   pinMode(pinValSal, INPUT);
   pinMode(ledP,OUTPUT);
-  attachInterrupt(digitalPinToInterrupt(pinValEnt), setPul1, HIGH);
-  attachInterrupt(digitalPinToInterrupt(pinValSal), setPul2, HIGH);
+  //attachInterrupt(0, setPul1, HIGH);
+  //attachInterrupt(1, setPul2, HIGH);
   Serial.begin(9600);
+  lcd.begin(16, 2);
+  lcd.print("Hola Helbert!!!");
 }
  
-void loop() {
-  digitalWrite(ledP,LOW);
-  // Con analogRead leemos el sensor, recuerda que es un valor de 0 a 1023
-  //tempC = analogRead(pinLM35); 
-   
-  // Calculamos la temperatura con la fórmula
-  //tempC = (2.0 * tempC * 100.0)/1024.0;
+void loop() { 
+ leer_temperatura();
+}
+
+int leer_temperatura (){
+  tmpThrVal = 40;
   valTmpSen = analogRead(pinLM35);
-  valTmpMed = (0.42 * valTmpSen * 100.0)/1024.0;
-  if(valTmpMed <= 40) {
+  valElcEnt = ! digitalRead(pinValEnt);
+  valElcSal = ! digitalRead(pinValSal);
+  lcd.begin(0,1);
+  valTmpMed = (0.51 * valTmpSen * 100.0)/1024.0;
+ lcd.print(valTmpMed);
+
+  if(valTmpMed <=tmpThrVal &&  valElcEnt ==1 &&  valElcSal ==1 )
+  {
    digitalWrite(ledP,HIGH);
+   intResSta = 1;
+   delay(500);
+
   }
-  //Serial.print(" valor voltaje :");
-  //Serial.print(valTmpSen);
-  //Serial.print("Temperatura: ");
-  //Serial.print(valTmpMed);
-  //Serial.print(" valor pin 1: ");
-  //Serial.print(pinValEnt);
-  //Serial.print(" valor pin 2: ");
-  //Serial.println(".");
-  delay(100);
+  else {
+    digitalWrite(ledP,LOW);
+    intResSta = 0;
+    delay(500);
+  }
+  
+  
 }
 
-void setPul1()
-{
-  valElcEnt = 1;
-}
-
-void setPul2()
-{
-  valElcSal = 1;
-}
 
