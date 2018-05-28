@@ -21,7 +21,7 @@ float tempC; // Variable para almacenar el valor obtenido del sensor (0 a 1023)
  */
  const int pinLM35 = 0; // sensor de temperatura
  const int ledP = 13;
- const int rs = 12, en = 11, d4 = 5, d5 = 4, d6 = 3, d7 = 2;
+ const int rs = 12, en = 11, d4 = 6, d5 = 5, d6 = 4, d7 = 3;
  const int pinValEnt = 8; //simulación de la electroválvula de entrada de agua (pin 1 DIPSW)
  const int pinValSal = 9; //simulación de la electroválvula de salida de agua (pin 2 DIPSW)
  LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
@@ -53,10 +53,14 @@ void setup() {
   //attachInterrupt(1, setPul2, HIGH);
   Serial.begin(9600);
   lcd.begin(16, 2);
-  lcd.print("Hola Helbert!!!");
+  lcd.print("Bienvenido...");
+  delay(5000);
 }
  
-void loop() { 
+void loop() {
+ lcd.clear();  
+ lcd.setCursor(0,0);
+ lcd.print("Temperatura: ");
  leer_temperatura();
 }
 
@@ -65,9 +69,10 @@ int leer_temperatura (){
   valTmpSen = analogRead(pinLM35);
   valElcEnt = ! digitalRead(pinValEnt);
   valElcSal = ! digitalRead(pinValSal);
-  lcd.begin(0,1);
+  lcd.setCursor(0,1);
   valTmpMed = (0.51 * valTmpSen * 100.0)/1024.0;
- lcd.print(valTmpMed);
+  lcd.print(valTmpMed);
+  lcd.print(" grados C");
 
   if(valTmpMed <=tmpThrVal &&  valElcEnt ==1 &&  valElcSal ==1 )
   {
