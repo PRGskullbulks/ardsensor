@@ -55,34 +55,34 @@ void setup() {                        //funcion setup de inicialización exigido
   delay(5000);                        //espera 5 segundos.
 }
  
-void loop() {
- lcd.clear();  
- lcd.setCursor(0,0);
- lcd.print("Temperatura: ");
- leer_temperatura();
+void loop() {                         //Funcion principal
+ lcd.clear();                         //limpieza LCD
+ lcd.setCursor(0,0);                  //poner cursor en la primera linea
+ lcd.print("Temperatura: ");          //imprimir temperatura
+ leer_temperatura();                  //ejecutar función leer temperatura
 }
 
-int leer_temperatura (){
-  tmpThrVal = 40;
-  valTmpSen = analogRead(pinLM35);
-  valElcEnt = ! digitalRead(pinValEnt);
-  valElcSal = ! digitalRead(pinValSal);
-  lcd.setCursor(0,1);
-  valTmpMed = (0.51 * valTmpSen * 100.0)/1024.0;
-  lcd.print(valTmpMed);
-  lcd.print(" grados C");
+int leer_temperatura (){              //inicia funcion leer temperatura 
+  tmpThrVal = 40;                     //se coloca el umbral de apagar / prender el calor en 40 grados
+  valTmpSen = analogRead(pinLM35);    //se lee el valor del sensor de temperatura
+  valElcEnt = ! digitalRead(pinValEnt); //Revisar si el sensor de entrada del agua está activo
+  valElcSal = ! digitalRead(pinValSal); //Revisar si el sensor de salida del agua está activo
+  lcd.setCursor(0,1);                   //ubicar el LCD en la segunda línea
+  valTmpMed = (0.51 * valTmpSen * 100.0)/1024.0;  //temperatura = valor leído *100 /1024
+  lcd.print(valTmpMed);                   //escribir el valor de la temperatura de la LCD
+  lcd.print(" grados C");                 
 
   if(valTmpMed <=tmpThrVal &&  valElcEnt ==1 &&  valElcSal ==1 )
   {
-   digitalWrite(ledP,HIGH);
-   intResSta = 1;
-   delay(500);
+   digitalWrite(ledP,HIGH);    //si las valvulas están activas  y la temperatura está por debajo del umbral prender la resistencia
+   intResSta = 1;               //estado resistencia en 1
+   delay(500);                 //Espera medio segundo
 
   }
   else {
-    digitalWrite(ledP,LOW);
-    intResSta = 0;
-    delay(500);
+    digitalWrite(ledP,LOW);  //valvulas sin agua, apagar la resistencia
+    intResSta = 0;            //Resistencia en 0
+    delay(500);               //Esperar medio segundo
   }
   
   
