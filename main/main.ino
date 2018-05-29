@@ -33,11 +33,11 @@ float tempC; // Variable para almacenar el valor obtenido del sensor (0 a 1023)
  */
 
 int intResSta = 0; //estado de la resistencia.
-int valTmpSen = 0;
-int valElcEnt = 0;
-int valElcSal = 0;
-int valTmpMed = 0;
-int tmpThrVal = 0;
+int valTmpSen = 0; //Variable temporal del sensor
+int valElcEnt = 0; //valor del pin sensor de entrada de agua
+int valElcSal = 0; //valor del pin sensor de salida de agua
+int valTmpMed = 0; //temperatura medida
+int tmpThrVal = 0; //umbral de temperatura del agua
 
 /*RESISTENCIA DE SALIDA
  * La resistencia de salida se activará de acuerdo a las siguientes características:
@@ -45,16 +45,14 @@ int tmpThrVal = 0;
  * + Las electroválvulas detecten full caudal
  * + la temperatura del agua esté por debajo de los 40°C
  */
-void setup() {
-  pinMode(pinValEnt, INPUT_PULLUP);
-  pinMode(pinValSal, INPUT);
-  pinMode(ledP,OUTPUT);
-  //attachInterrupt(0, setPul1, HIGH);
-  //attachInterrupt(1, setPul2, HIGH);
+void setup() {                        //funcion setup de inicialización exigido por arduino
+  pinMode(pinValEnt, INPUT_PULLUP);   //pin de tipo entrada flanco de subida
+  pinMode(pinValSal, INPUT);          //pin de tipo entrada
+  pinMode(ledP,OUTPUT);               //pin salida
   Serial.begin(9600);
-  lcd.begin(16, 2);
-  lcd.print("Bienvenido...");
-  delay(5000);
+  lcd.begin(16, 2);                   //inicialización del lcd
+  lcd.print("Bienvenido...");         //mensaje de bienvenida
+  delay(5000);                        //espera 5 segundos.
 }
  
 void loop() {
